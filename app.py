@@ -134,6 +134,9 @@ def preprocess(image: np.ndarray, resolution: int = 560):
 def postprocess(outputs, scale, pad_x, pad_y, orig_w, orig_h, resolution, conf_thresh):
     logits = outputs[0]
     boxes  = outputs[1]
+    st.write(f"logits shape: {logits.shape}, min: {logits.min():.3f}, max: {logits.max():.3f}")
+    st.write(f"boxes shape: {boxes.shape}, min: {boxes.min():.3f}, max: {boxes.max():.3f}")
+    st.write(f"scores after sigmoid — min: {(1/(1+np.exp(-logits[0]))).min():.3f}, max: {(1/(1+np.exp(-logits[0]))).max():.3f}")
     scores = 1 / (1 + np.exp(-logits[0]))
     scores = scores.max(axis=-1)
     mask   = scores > conf_thresh
