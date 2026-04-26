@@ -132,16 +132,15 @@ def preprocess(image: np.ndarray, resolution: int = 560):
 
 
 def postprocess(outputs, scale, pad_x, pad_y, orig_w, orig_h, resolution, conf_thresh):
-    logits = outputs[0]
-    boxes  = outputs[1]
-    st.write(f"logits shape: {logits.shape}, min: {logits.min():.3f}, max: {logits.max():.3f}")
-    st.write(f"boxes shape: {boxes.shape}, min: {boxes.min():.3f}, max: {boxes.max():.3f}")
-    st.write(f"scores after sigmoid — min: {(1/(1+np.exp(-logits[0]))).min():.3f}, max: {(1/(1+np.exp(-logits[0]))).max():.3f}")
-    scores = 1 / (1 + np.exp(-logits[0]))
-    scores = scores.max(axis=-1)
+    boxes  = outputs[0][0]   # (300, 4) — cx, cy, w, h normalised
+    logits = outputs[1][0]   # (300, 2) — already probabilities, NOT logits
+
+    scores = logits.max(axis=-1)   # (300,) — no sigmoid needed
+
     mask   = scores > conf_thresh
     scores = scores[mask]
-    boxes  = boxes[0][mask]
+    boxes  = boxes[mask]
+
     detections = []
     for score, box in zip(scores, boxes):
         box = np.array(box).flatten()
@@ -153,11 +152,13 @@ def postprocess(outputs, scale, pad_x, pad_y, orig_w, orig_h, resolution, conf_t
         cx -= pad_x;      cy -= pad_y
         cx /= scale;      cy /= scale
         bw /= scale;      bh /= scale
+
         x1 = max(0,      int(cx - bw / 2))
         y1 = max(0,      int(cy - bh / 2))
         x2 = min(orig_w, int(cx + bw / 2))
         y2 = min(orig_h, int(cy + bh / 2))
         detections.append((x1, y1, x2, y2, float(score)))
+
     return detections
 
 
