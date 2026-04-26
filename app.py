@@ -141,7 +141,10 @@ def postprocess(outputs, scale, pad_x, pad_y, orig_w, orig_h, resolution, conf_t
     boxes  = boxes[0][mask]
     detections = []
     for score, box in zip(scores, boxes):
-        cx, cy, bw, bh = box
+        box = np.array(box).flatten()
+        if len(box) < 4:
+            continue
+        cx, cy, bw, bh = box[:4]
         cx *= resolution; cy *= resolution
         bw *= resolution; bh *= resolution
         cx -= pad_x;      cy -= pad_y
