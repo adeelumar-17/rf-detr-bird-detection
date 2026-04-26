@@ -2,3 +2,4 @@ streamlit
 onnxruntime
 opencv-python
 pillow
+huggingface_hub
