@@ -4,6 +4,9 @@ A complete bird detection system built for airport runway safety. The project co
 
 Birds near airport runways are a real danger — [bird strikes cause over $1.2 billion in damage annually](https://www.faa.gov/airports/airport_safety/wildlife) to the aviation industry. This system detects birds in images and video feeds so airport operators can assess risk in real time.
 
+<img width="1462" height="493" alt="Screenshot_20260428_005950" src="https://github.com/user-attachments/assets/d518738e-b24b-442c-bc50-f9bc2ff7abf5" />
+
+
 ---
 
 ## What This Project Does
